@@ -6,6 +6,7 @@ import { useState, useMemo } from 'react';
 import { interpolateRoute } from './utils/interpolateRoute';
 import { usePlayback } from './hooks/usePlayback';
 import { useSessionStorage } from './hooks/useSessionStorage';
+import { useLoadScript } from "@react-google-maps/api"; // ADD THIS
 
 // Helper: Google Geocoding API
 async function geocodeAddress(address) {
@@ -20,8 +21,13 @@ async function geocodeAddress(address) {
   return null;
 }
 
-
 export default function App() {
+  // Load Google Maps JS API with "places" library for autocomplete
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
+  });
+
   const [mapCenter, setMapCenter] = useState(null);
 
   async function handleSearchAddress(address) {
@@ -29,10 +35,8 @@ export default function App() {
     if (result) setMapCenter(result);
     // Optionally: else show an error/toast
   }
-  const [waypoints, setWaypoints] = useSessionStorage(
-    'waypoints',
-    []
-  );
+
+  const [waypoints, setWaypoints] = useSessionStorage('waypoints', []);
   const [polyline, setPolyline] = useState([]);
   const [stats, setStats] = useState(null);
 
@@ -43,6 +47,9 @@ export default function App() {
 
   // Set default playback speed to 1x
   const playback = usePlayback(interpolatedRoute, 0.25);
+
+  if (loadError) return <div className="p-10">Error loading Google Maps API</div>;
+  if (!isLoaded) return <div className="p-10">Loading Maps…</div>;
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
