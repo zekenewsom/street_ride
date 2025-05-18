@@ -30,8 +30,8 @@ export default function ControlsBar({
   const stepDisplaySpeed = 0.1;
 
   const displaySpeed = Number(ACTUAL_TO_DISPLAY(playback.playSpeed)).toFixed(2);
-  const percent = playback.length > 1 ? (playback.index / (playback.length - 1)) * 100 : 0;
 
+  // Progress label
   const progressLabel =
     stats && stats.distance
       ? `${(stats.distance / 1609.34).toFixed(1)} of ${stats.total ? (stats.total / 1609.34).toFixed(1) : (stats.distance / 1609.34).toFixed(1)} mi`
@@ -40,6 +40,7 @@ export default function ControlsBar({
   let speedValue = Number(playback.playSpeed / 0.25);
   let speedLabel = speedValue % 1 === 0 ? `${speedValue.toFixed(0)}x` : `${speedValue.toFixed(1)}x`;
 
+  // --- UI ---
   return (
     <div className="w-full flex justify-center pointer-events-none mb-3">
       <div
@@ -51,6 +52,7 @@ export default function ControlsBar({
           marginBottom: "10px",
         }}
       >
+        {/* Controls row */}
         <div className="flex items-center w-full gap-7">
           {/* Left: Step buttons */}
           <div className="flex items-center gap-3">
@@ -66,11 +68,7 @@ export default function ControlsBar({
             </button>
             <button
               onClick={() => playback.setIsPlaying((v) => !v)}
-              className={`w-16 h-16 flex items-center justify-center rounded-full ${
-                playback.isPlaying
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "bg-blue-600 hover:bg-blue-700"
-              } shadow-xl border-4 border-blue-200 transition-all text-white text-5xl outline-none focus:ring-2 focus:ring-blue-400`}
+              className={`w-16 h-16 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 shadow-xl border-4 border-blue-200 transition-all text-white text-5xl outline-none focus:ring-2 focus:ring-blue-400`}
               aria-label={playback.isPlaying ? "Pause playback" : "Play playback"}
               tabIndex={0}
               style={{ margin: "0 1rem" }}
@@ -98,48 +96,28 @@ export default function ControlsBar({
             </button>
           </div>
 
-          {/* Middle: Progress */}
-          <div className="flex flex-col flex-1 min-w-0 items-center">
-            <div className="relative w-full max-w-[340px] h-7 flex items-center" style={{ zIndex: 2 }}>
-              {/* Progress bar bg */}
-              <div className="w-full h-3 rounded-full bg-gray-300" style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", zIndex: 1 }} />
-              {/* Progress bar fill */}
-              <div
-                className="h-3 rounded-full bg-blue-600 transition-all"
-                style={{
-                  width: `${percent}%`,
-                  position: "absolute",
-                  left: 0,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  zIndex: 2,
-                  minWidth: percent > 0 ? "10px" : "0px", // always show at least a little blue when > 0
-                }}
-              />
-              {/* Thumb */}
-              <div
-                className="absolute"
-                style={{
-                  left: `calc(${percent}% - 10px)`,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  zIndex: 3,
-                  pointerEvents: "none",
-                }}
-              >
-                <div className="w-5 h-5 bg-white border-2 border-blue-600 rounded-full shadow" />
-              </div>
-              {/* Range input OVER the bar (so it's always clickable/draggable) */}
+          {/* MIDDLE: Progression slider */}
+          <div className="flex flex-col flex-1 min-w-0 items-center px-5">
+            <div className="flex w-full items-center gap-3">
+              <span className="text-xs text-gray-700 font-medium w-16 text-right truncate">
+                {playback.length > 1 ? `Step ${playback.index + 1}` : ""}
+              </span>
               <input
                 type="range"
                 min={0}
                 max={playback.length - 1}
                 value={playback.index}
                 onChange={(e) => playback.setIndex(Number(e.target.value))}
-                className="w-full h-7 absolute top-0 left-0 opacity-0 z-10 cursor-pointer"
+                className="w-full accent-blue-600 h-2 rounded-lg bg-gray-200"
                 aria-label="Playback position"
-                style={{ accentColor: "#2563eb" }}
+                style={{
+                  height: 8,
+                  // accentColor: "#2563eb", // Modern browsers only; Tailwind's accent-blue-600 covers this
+                }}
               />
+              <span className="text-xs text-gray-700 font-medium w-16 text-left truncate">
+                {playback.length > 1 ? `/${playback.length}` : ""}
+              </span>
             </div>
             <div className="flex justify-between w-full text-xs mt-2 text-gray-800">
               <span>{progressLabel}</span>
@@ -147,7 +125,7 @@ export default function ControlsBar({
             </div>
           </div>
 
-          {/* Right: Speed control */}
+          {/* RIGHT: Speed control */}
           <div className="flex flex-col items-center ml-5">
             <input
               type="range"

@@ -29,9 +29,9 @@ export default function SplitScreen({
     return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
   }
 
-  const currentPosition = playback.position || waypoints[0];
-  // Use playback.index and waypoints/polyline to determine next position
-  const nextPosition = playback.position || waypoints[playback.index + 1] || waypoints[playback.index];
+  // Use polyline and playback.index for heading calculation
+  const currentPosition = polyline[playback.index] || waypoints[0];
+  const nextPosition = polyline[playback.index + 1] || currentPosition;
   const streetViewHeading = calculateHeading(currentPosition, nextPosition);
 
   function handleDrag(clientX) {
