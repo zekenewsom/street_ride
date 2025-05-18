@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { GoogleMap, useLoadScript, Polyline, Marker } from "@react-google-maps/api";
 import { fetchRouteJS } from "../utils/routeUtils";
+import MapSearch from "./MapSearch";
 
 const containerStyle = {
   width: "100%",
@@ -10,7 +11,7 @@ const containerStyle = {
 };
 const center = { lat: 37.7749, lng: -122.4194 };
 
-export default function MapPanel({ waypoints, setWaypoints, polyline, setPolyline, setStats, animatedMarker, mapCenter }) {
+export default function MapPanel({ waypoints, setWaypoints, polyline, setPolyline, setStats, animatedMarker, mapCenter, onSearchAddress }) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
@@ -77,6 +78,10 @@ export default function MapPanel({ waypoints, setWaypoints, polyline, setPolylin
 
   return (
     <div className="relative w-full h-full flex">
+      {/* Floating search bar (top-right) */}
+      <div className="absolute top-6 right-8 z-40">
+        <MapSearch onSearchAddress={onSearchAddress} />
+      </div>
       {/* Waypoints Dropdown - Uber Style */}
       <div className="absolute top-6 right-8 z-30">
         <button

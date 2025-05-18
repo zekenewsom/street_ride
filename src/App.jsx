@@ -59,18 +59,19 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
-      <HeaderBar onSearchAddress={handleSearchAddress} />
+      <HeaderBar />
       <div className="flex-1 flex flex-col relative">
-        <SplitScreen
-          waypoints={waypoints}
-          setWaypoints={setWaypoints}
-          polyline={polyline}
-          setPolyline={setPolyline}
-          stats={stats}
-          setStats={setStats}
-          playback={playback}
-          mapCenter={mapCenter}
-        />
+      <SplitScreen
+        waypoints={waypoints}
+        setWaypoints={setWaypoints}
+        polyline={polyline}
+        setPolyline={setPolyline}
+        stats={stats}
+        setStats={setStats}
+        playback={playback}
+        mapCenter={mapCenter}
+        onSearchAddress={handleSearchAddress}
+      />
       </div>
       <ControlsBar playback={playback} stats={stats} />
       <Footer />

@@ -12,7 +12,8 @@ export default function SplitScreen({
   stats,
   setStats,
   playback,
-  mapCenter
+  mapCenter,
+  onSearchAddress, // <-- NEW PROP
 }) {
   const [leftWidth, setLeftWidth] = useState(window.innerWidth / 2);
   const [popoutOpen, setPopoutOpen] = useState(false);
@@ -85,11 +86,10 @@ export default function SplitScreen({
             setStats={setStats}
             animatedMarker={currentPosition}
             mapCenter={mapCenter}
+            onSearchAddress={onSearchAddress} // <-- FORWARDED PROP!
           />
         </div>
-
       </div>
-
     </div>
   );
 }
