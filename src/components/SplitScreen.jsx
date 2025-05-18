@@ -1,43 +1,21 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import ResizableDivider from "./ResizableDivider";
 import MapPanel from "./MapPanel";
 import StreetViewPanel from "./StreetViewPanel";
 import Modal from "./Modal";
 import SharePanel from "./SharePanel";
-import ControlsBar from "./ControlsBar";
-import { interpolateRoute } from "../utils/interpolateRoute";
-import { usePlayback } from "../hooks/usePlayback";
-import { useSessionStorage } from "../hooks/useSessionStorage";
-import { decodeWaypoints } from "../utils/shareUtils";
 
-export default function SplitScreen() {
-  function getInitialWaypoints() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("route")) {
-      return decodeWaypoints(params.get("route"));
-    }
-    return null;
-  }
-
-  const [waypoints, setWaypoints] = useSessionStorage(
-    "waypoints",
-    getInitialWaypoints() || []
-  );
-  const [leftWidth, setLeftWidth] = useSessionStorage(
-    "splitWidth",
-    window.innerWidth / 2
-  );
-  const [polyline, setPolyline] = useState([]);
-  const [stats, setStats] = useState(null);
+export default function SplitScreen({
+  waypoints,
+  setWaypoints,
+  polyline,
+  setPolyline,
+  stats,
+  setStats,
+  playback
+}) {
+  const [leftWidth, setLeftWidth] = useState(window.innerWidth / 2);
   const [popoutOpen, setPopoutOpen] = useState(false);
-
-  const interpolatedRoute = useMemo(
-    () => interpolateRoute(polyline, 15),
-    [polyline]
-  );
-
-  // Set default playback speed to 1x
-  const playback = usePlayback(interpolatedRoute, 1);
 
   function calculateHeading(a, b) {
     if (!a || !b) return 0;
@@ -52,8 +30,8 @@ export default function SplitScreen() {
   }
 
   const currentPosition = playback.position || waypoints[0];
-  const nextPosition =
-    interpolatedRoute[playback.index + 1] || interpolatedRoute[playback.index];
+  // Use playback.index and waypoints/polyline to determine next position
+  const nextPosition = playback.position || waypoints[playback.index + 1] || waypoints[playback.index];
   const streetViewHeading = calculateHeading(currentPosition, nextPosition);
 
   function handleDrag(clientX) {

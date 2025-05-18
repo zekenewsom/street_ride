@@ -25,9 +25,9 @@ export default function ControlsBar({ playback = {
 
   return (
     <div className="w-full flex justify-center items-end pointer-events-none">
-      <div ref={barRef} className="pointer-events-auto w-full max-w-3xl rounded-[2.5rem] bg-black/80 backdrop-blur-2xl shadow-[0_12px_48px_rgba(0,0,0,0.45)] border-2 border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-10 px-12 py-7 font-sans font-bold text-lg animate-fadein-slideup transition-all duration-500" style={{boxSizing:'border-box', fontFamily: 'Inter, sans-serif'}}>
-        {/* Playback Controls */}
-        <div className="flex items-center gap-8">
+      <div ref={barRef} className="pointer-events-auto w-full max-w-3xl rounded-[2.5rem] bg-black/80 backdrop-blur-2xl shadow-[0_12px_48px_rgba(0,0,0,0.45)] border-2 border-white/10 flex flex-col items-center gap-6 px-6 py-6 font-sans font-bold text-lg animate-fadein-slideup transition-all duration-500" style={{boxSizing:'border-box', fontFamily: 'Inter, sans-serif'}}>
+        {/* Large, Centered Playback Controls at the Top */}
+        <div className="flex items-center justify-center gap-8 w-full mb-3">
           <button
             onClick={() => playback.setIsPlaying((v) => !v)}
             className="w-20 h-20 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 active:bg-gray-300 shadow-2xl border-2 border-black transition-all text-black text-5xl outline-none focus:ring-4 focus:ring-black/30"
@@ -35,28 +35,30 @@ export default function ControlsBar({ playback = {
             tabIndex={0}
           >
             {playback.isPlaying ? (
-              <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="6" className="w-12 h-12"><rect x="14" y="12" width="10" height="36" rx="5" fill="black"/><rect x="36" y="12" width="10" height="36" rx="5" fill="black"/></svg>
+              <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="6" className="w-14 h-14"><rect x="14" y="12" width="10" height="36" rx="5" fill="black"/><rect x="36" y="12" width="10" height="36" rx="5" fill="black"/></svg>
             ) : (
-              <svg viewBox="0 0 60 60" fill="black" className="w-12 h-12"><polygon points="16,12 48,30 16,48" /></svg>
+              <svg viewBox="0 0 60 60" fill="black" className="w-14 h-14"><polygon points="16,12 48,30 16,48" /></svg>
             )}
           </button>
           <button
             onClick={playback.stepBackward}
-            className="w-14 h-14 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 active:bg-gray-300 shadow-xl border-2 border-black transition-all text-black text-4xl outline-none focus:ring-4 focus:ring-black/30"
+            className="w-16 h-16 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 active:bg-gray-300 shadow-xl border-2 border-black transition-all text-black text-4xl outline-none focus:ring-4 focus:ring-black/30"
             aria-label="Step backward"
             tabIndex={0}
           >
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="4" className="w-10 h-10"><polyline points="32 40 16 24 32 8" /></svg>
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="4" className="w-12 h-12"><polyline points="32 40 16 24 32 8" /></svg>
           </button>
           <button
             onClick={playback.stepForward}
-            className="w-14 h-14 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 active:bg-gray-300 shadow-xl border-2 border-black transition-all text-black text-4xl outline-none focus:ring-4 focus:ring-black/30"
+            className="w-16 h-16 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 active:bg-gray-300 shadow-xl border-2 border-black transition-all text-black text-4xl outline-none focus:ring-4 focus:ring-black/30"
             aria-label="Step forward"
             tabIndex={0}
           >
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="4" className="w-10 h-10"><polyline points="16 40 32 24 16 8" /></svg>
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="4" className="w-12 h-12"><polyline points="16 40 32 24 16 8" /></svg>
           </button>
         </div>
+        <div className="w-full border-t border-white/20 mb-3"></div>
+        {/* Progress Bar and Step Label */}
         {/* Progress Bar and Step Label */}
         <div className="flex flex-col items-center flex-1 min-w-0">
           <div className="flex justify-between w-full mb-2 text-base text-gray-200 font-semibold">

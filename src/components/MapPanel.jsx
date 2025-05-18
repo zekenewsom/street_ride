@@ -81,7 +81,7 @@ export default function MapPanel({ waypoints, setWaypoints, polyline, setPolylin
         </button>
         {/* Dropdown Card */}
         <div
-          className={`origin-top-right mt-3 right-0 min-w-[320px] bg-white rounded-2xl shadow-2xl border border-gray-200 p-5 font-sans font-medium absolute transition-all duration-200 ${showDropdown ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
+          className={`origin-top-right mt-3 right-0 min-w-[320px] sm:min-w-[370px] bg-white rounded-2xl shadow-2xl border border-gray-200 p-5 font-sans font-medium absolute transition-all duration-200 ${showDropdown ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
           style={{backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'}}
           tabIndex={-1}
           aria-label="Waypoints dropdown menu"
@@ -95,17 +95,17 @@ export default function MapPanel({ waypoints, setWaypoints, polyline, setPolylin
               <span className="font-semibold text-base">Click on the map to start your route!</span>
             </div>
           ) : (
-            <ol className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">
+            <ol className="flex flex-col gap-3 max-h-60 overflow-y-auto pr-1">
               {waypoints.map((wp, idx) => (
-                <li key={idx} className="flex items-center gap-3 bg-gray-50 rounded-xl px-3 py-2 shadow-sm">
-                  <span className="w-7 h-7 flex items-center justify-center rounded-full bg-black text-white font-bold text-base shadow">{idx + 1}</span>
-                  <span className="flex-1 text-gray-800 truncate">Lat {wp.lat.toFixed(4)}, Lng {wp.lng.toFixed(4)}</span>
+                <li key={idx} className="flex items-center gap-4 bg-gray-50 rounded-xl px-3 py-3 shadow-sm">
+                  <span className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white font-bold text-base shadow">{idx + 1}</span>
+                  <span className="flex-1 text-gray-800 truncate text-base">Lat {wp.lat.toFixed(4)}, Lng {wp.lng.toFixed(4)}</span>
                   <button
                     onClick={() => handleMarkerRightClick(idx)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-red-100 text-gray-500 hover:text-red-500 transition-all focus:outline-none focus:ring-2 focus:ring-red-400"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 hover:bg-red-200 text-gray-600 hover:text-red-600 transition-all focus:outline-none focus:ring-2 focus:ring-red-400 text-lg"
                     aria-label={`Remove waypoint ${idx + 1}`}
                   >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
                   </button>
                 </li>
               ))}
