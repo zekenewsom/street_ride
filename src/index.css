@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html, body, #root {
+  height: 100%;
+}
+
+html, body, .font-sans {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ControlsBar fade-in/slide-up animation */
+@keyframes fadein-slideup {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fadein-slideup {
+  animation: fadein-slideup 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Touch improvements */
+button, input, select {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
