@@ -42,7 +42,7 @@ export default function App() {
   );
 
   // Set default playback speed to 1x
-  const playback = usePlayback(interpolatedRoute, 1);
+  const playback = usePlayback(interpolatedRoute, 0.25);
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">

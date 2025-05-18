@@ -25,22 +25,20 @@ export default function ControlsBar({
     }
   }, []);
 
-  // Fine control: displaySpeed goes from 1.00 to 4.00 (UI), underlying is .25 to 1.0
-  const minDisplaySpeed = 1;
-  const maxDisplaySpeed = 4;
-  const stepDisplaySpeed = 0.01;
+  const minDisplaySpeed = 0.1;
+  const maxDisplaySpeed = 5.0;
+  const stepDisplaySpeed = 0.1;
 
-  const displaySpeed = ACTUAL_TO_DISPLAY(playback.playSpeed).toFixed(2);
+  const displaySpeed = Number(ACTUAL_TO_DISPLAY(playback.playSpeed)).toFixed(2);
   const percent = playback.length > 1 ? (playback.index / (playback.length - 1)) * 100 : 0;
 
-  // Progress Bar Labels
   const progressLabel =
     stats && stats.distance
       ? `${(stats.distance / 1609.34).toFixed(1)} of ${stats.total ? (stats.total / 1609.34).toFixed(1) : (stats.distance / 1609.34).toFixed(1)} mi`
       : `Step ${playback.index + 1} / ${playback.length}`;
 
-  // UI Label: always shows "1x" when 0.25, "1.50x" for 0.375, etc.
-  const speedLabel = Number(playback.playSpeed / 0.25).toFixed(2).replace(/\.00$/, "") + "x";
+  let speedValue = Number(playback.playSpeed / 0.25);
+  let speedLabel = speedValue % 1 === 0 ? `${speedValue.toFixed(0)}x` : `${speedValue.toFixed(1)}x`;
 
   return (
     <div className="w-full flex justify-center pointer-events-none mb-3">
@@ -53,7 +51,6 @@ export default function ControlsBar({
           marginBottom: "10px",
         }}
       >
-        {/* Controls and progress */}
         <div className="flex items-center w-full gap-7">
           {/* Left: Step buttons */}
           <div className="flex items-center gap-3">
@@ -67,7 +64,6 @@ export default function ControlsBar({
                 <polyline points="16 20 8 12 16 4" />
               </svg>
             </button>
-            {/* Play button */}
             <button
               onClick={() => playback.setIsPlaying((v) => !v)}
               className={`w-16 h-16 flex items-center justify-center rounded-full ${
@@ -80,13 +76,11 @@ export default function ControlsBar({
               style={{ margin: "0 1rem" }}
             >
               {playback.isPlaying ? (
-                // Pause icon
                 <svg width={40} height={40} fill="none" viewBox="0 0 40 40">
                   <rect x={10} y={8} width={6} height={24} rx={3} fill="white" />
                   <rect x={24} y={8} width={6} height={24} rx={3} fill="white" />
                 </svg>
               ) : (
-                // Play icon
                 <svg width={40} height={40} fill="white" viewBox="0 0 40 40">
                   <polygon points="14,8 32,20 14,32" />
                 </svg>
@@ -103,32 +97,56 @@ export default function ControlsBar({
               </svg>
             </button>
           </div>
+
           {/* Middle: Progress */}
           <div className="flex flex-col flex-1 min-w-0 items-center">
-            {/* Progress bar */}
-            <div className="relative w-full max-w-[320px]">
-              <div className="h-2 rounded-full bg-gray-200 w-full" />
+            <div className="relative w-full max-w-[340px] h-7 flex items-center" style={{ zIndex: 2 }}>
+              {/* Progress bar bg */}
+              <div className="w-full h-3 rounded-full bg-gray-300" style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", zIndex: 1 }} />
+              {/* Progress bar fill */}
               <div
-                className="absolute left-0 top-0 h-2 rounded-full bg-blue-500 transition-all"
-                style={{ width: `${percent}%` }}
+                className="h-3 rounded-full bg-blue-600 transition-all"
+                style={{
+                  width: `${percent}%`,
+                  position: "absolute",
+                  left: 0,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 2,
+                  minWidth: percent > 0 ? "10px" : "0px", // always show at least a little blue when > 0
+                }}
               />
+              {/* Thumb */}
+              <div
+                className="absolute"
+                style={{
+                  left: `calc(${percent}% - 10px)`,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 3,
+                  pointerEvents: "none",
+                }}
+              >
+                <div className="w-5 h-5 bg-white border-2 border-blue-600 rounded-full shadow" />
+              </div>
+              {/* Range input OVER the bar (so it's always clickable/draggable) */}
               <input
                 type="range"
                 min={0}
                 max={playback.length - 1}
                 value={playback.index}
                 onChange={(e) => playback.setIndex(Number(e.target.value))}
-                className="w-full h-2 opacity-0 absolute top-0 left-0 cursor-pointer"
+                className="w-full h-7 absolute top-0 left-0 opacity-0 z-10 cursor-pointer"
                 aria-label="Playback position"
                 style={{ accentColor: "#2563eb" }}
               />
             </div>
-            {/* Distance & step label */}
             <div className="flex justify-between w-full text-xs mt-2 text-gray-800">
               <span>{progressLabel}</span>
               <span className="text-gray-500 font-semibold">{speedLabel}</span>
             </div>
           </div>
+
           {/* Right: Speed control */}
           <div className="flex flex-col items-center ml-5">
             <input
@@ -138,9 +156,9 @@ export default function ControlsBar({
               step={stepDisplaySpeed}
               value={Number(displaySpeed)}
               onChange={(e) =>
-                playback.setPlaySpeed(DISPLAY_TO_ACTUAL(Number(e.target.value)))
+                playback.setPlaySpeed(Number(e.target.value) * 0.25)
               }
-              className="w-24 accent-blue-600"
+              className="w-32 accent-blue-600"
               aria-label="Playback speed"
             />
             <span className="mt-1 text-xs text-gray-600 rounded-lg bg-gray-100 px-2 py-1 font-semibold">
