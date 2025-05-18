@@ -51,7 +51,7 @@ export default function ControlsBar({
     <div className="w-full flex justify-center pointer-events-none mb-3 relative">
       <div
         ref={barRef}
-        className="pointer-events-auto w-full max-w-4xl rounded-2xl bg-white shadow-2xl flex flex-row items-center px-7 py-3 font-sans border border-gray-200 relative"
+        className="pointer-events-auto w-full max-w-4xl rounded-2xl bg-white shadow-2xl flex flex-row items-center px-7 py-3 font-sans border border-gray-200"
         style={{
           boxSizing: "border-box",
           fontFamily: "Inter, sans-serif",
@@ -100,34 +100,30 @@ export default function ControlsBar({
           </button>
         </div>
 
-        {/* CENTER: Absolute, perfectly centered progression slider and stats */}
-        <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full"
-          style={{ pointerEvents: "auto" }}
-        >
-          <div className="flex w-full justify-center">
-            <div className="w-full max-w-2xl flex items-center gap-2">
-              <span className="text-xs text-gray-700 font-medium w-14 text-right truncate select-none">
-                {playback.length > 1 ? `Step ${playback.index + 1}` : ""}
-              </span>
-              <input
-                type="range"
-                min={0}
-                max={playback.length - 1}
-                value={playback.index}
-                onChange={(e) => playback.setIndex(Number(e.target.value))}
-                className="w-full accent-blue-600 h-2 rounded-lg bg-gray-200"
-                aria-label="Playback position"
-                style={{
-                  height: 8,
-                  minWidth: 180,
-                  maxWidth: 560, // wider!
-                }}
-              />
-              <span className="text-xs text-gray-700 font-medium w-14 text-left truncate select-none">
-                {playback.length > 1 ? `/${playback.length}` : ""}
-              </span>
-            </div>
+        {/* CENTER: Column, always centered, flex-1 */}
+        <div className="flex-1 flex flex-col items-center justify-center px-4">
+          {/* Progress Bar */}
+          <div className="w-full max-w-2xl flex items-center gap-2 mx-auto">
+            <span className="text-xs text-gray-700 font-medium w-14 text-right truncate select-none">
+              {playback.length > 1 ? `Step ${playback.index + 1}` : ""}
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={playback.length - 1}
+              value={playback.index}
+              onChange={(e) => playback.setIndex(Number(e.target.value))}
+              className="w-full accent-blue-600 h-2 rounded-lg bg-gray-200"
+              aria-label="Playback position"
+              style={{
+                height: 8,
+                minWidth: 180,
+                maxWidth: 560,
+              }}
+            />
+            <span className="text-xs text-gray-700 font-medium w-14 text-left truncate select-none">
+              {playback.length > 1 ? `/${playback.length}` : ""}
+            </span>
           </div>
           {/* Centered mileage label under bar */}
           <div className="flex justify-center w-full text-xs mt-2 text-gray-800">
