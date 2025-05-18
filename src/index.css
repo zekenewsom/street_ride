@@ -6,10 +6,15 @@
 
 html, body, #root {
   height: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+  font-size: 17px;
 }
 
 html, body, .font-sans {
   font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: 0.01em;
+  color: #1a202c;
 }
 
 /* ControlsBar fade-in/slide-up animation */
@@ -25,4 +30,41 @@ html, body, .font-sans {
 button, input, select {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+}
+
+button, input[type="range"] {
+  transition: box-shadow 0.2s, border 0.2s, background 0.2s, color 0.2s;
+}
+
+button:focus, input:focus, input[type="range"]:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px #2563eb44 !important;
+  border-color: #2563eb !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  box-shadow: 0 2px 8px rgba(30,64,175,0.25);
+}
+
+input[type="range"]::-moz-range-thumb {
+  box-shadow: 0 2px 8px rgba(30,64,175,0.25);
+}
+
+/* Card and shadow polish for dropdowns and controls */
+.shadow-lg, .shadow-xl, .shadow-2xl, .shadow {
+  box-shadow: 0 8px 32px rgba(30,64,175,0.10), 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Make modal backgrounds and dropdowns more lively */
+.bg-gradient-to-br {
+  background: linear-gradient(135deg, #2563eb 0%, #18192a 100%) !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background: #e0e7ef;
+}
+::-webkit-scrollbar-thumb {
+  background: #b3c5e6;
+  border-radius: 8px;
 }

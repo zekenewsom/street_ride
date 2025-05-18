@@ -3,7 +3,6 @@ import ResizableDivider from "./ResizableDivider";
 import MapPanel from "./MapPanel";
 import StreetViewPanel from "./StreetViewPanel";
 import Modal from "./Modal";
-import SharePanel from "./SharePanel";
 
 export default function SplitScreen({
   waypoints,
@@ -12,7 +11,8 @@ export default function SplitScreen({
   setPolyline,
   stats,
   setStats,
-  playback
+  playback,
+  mapCenter
 }) {
   const [leftWidth, setLeftWidth] = useState(window.innerWidth / 2);
   const [popoutOpen, setPopoutOpen] = useState(false);
@@ -84,12 +84,10 @@ export default function SplitScreen({
             setPolyline={setPolyline}
             setStats={setStats}
             animatedMarker={currentPosition}
+            mapCenter={mapCenter}
           />
         </div>
-        {/* Share Panel trigger */}
-        <div className="absolute top-2 left-2 z-30">
-          <SharePanel waypoints={waypoints} />
-        </div>
+
       </div>
 
     </div>

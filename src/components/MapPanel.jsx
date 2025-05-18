@@ -10,7 +10,7 @@ const containerStyle = {
 };
 const center = { lat: 37.7749, lng: -122.4194 };
 
-export default function MapPanel({ waypoints, setWaypoints, polyline, setPolyline, setStats, animatedMarker }) {
+export default function MapPanel({ waypoints, setWaypoints, polyline, setPolyline, setStats, animatedMarker, mapCenter }) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
@@ -65,6 +65,13 @@ export default function MapPanel({ waypoints, setWaypoints, polyline, setPolylin
   // Dropdown state
   const [showDropdown, setShowDropdown] = useState(false);
 
+  // Pan map when mapCenter changes
+  useEffect(() => {
+    if (mapCenter && mapRef.current) {
+      mapRef.current.panTo(mapCenter);
+    }
+  }, [mapCenter]);
+
   if (!isLoaded)
     return <div className="w-full h-full flex items-center justify-center font-sans font-medium text-lg">Loading Map...</div>;
 
@@ -74,10 +81,10 @@ export default function MapPanel({ waypoints, setWaypoints, polyline, setPolylin
       <div className="absolute top-6 right-8 z-30">
         <button
           onClick={() => setShowDropdown((s) => !s)}
-          className="w-14 h-14 flex items-center justify-center rounded-full bg-black bg-opacity-90 hover:bg-opacity-100 shadow-xl border border-gray-900 transition-all focus:outline-none focus:ring-4 focus:ring-black/30"
+          className="w-20 h-20 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 shadow-2xl border-4 border-white transition-all focus:outline-none focus:ring-8 focus:ring-blue-400 duration-150"
           aria-label={showDropdown ? 'Hide waypoints list' : 'Show waypoints list'}
         >
-          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><path d="M12 2C7.03 2 3 6.03 3 11c0 5.25 7.2 10.62 8.13 11.31a1.5 1.5 0 0 0 1.74 0C13.8 21.62 21 16.25 21 11c0-4.97-4.03-9-9-9Zm0 13.25a4.25 4.25 0 1 1 0-8.5 4.25 4.25 0 0 1 0 8.5Z"/></svg>
+          <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M12 2C7.03 2 3 6.03 3 11c0 5.25 7.2 10.62 8.13 11.31a1.5 1.5 0 0 0 1.74 0C13.8 21.62 21 16.25 21 11c0-4.97-4.03-9-9-9Zm0 13.25a4.25 4.25 0 1 1 0-8.5 4.25 4.25 0 0 1 0 8.5Z"/></svg>
         </button>
         {/* Dropdown Card */}
         <div
@@ -97,18 +104,22 @@ export default function MapPanel({ waypoints, setWaypoints, polyline, setPolylin
           ) : (
             <ol className="flex flex-col gap-3 max-h-60 overflow-y-auto pr-1">
               {waypoints.map((wp, idx) => (
-                <li key={idx} className="flex items-center gap-4 bg-gray-50 rounded-xl px-3 py-3 shadow-sm">
-                  <span className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white font-bold text-base shadow">{idx + 1}</span>
-                  <span className="flex-1 text-gray-800 truncate text-base">Lat {wp.lat.toFixed(4)}, Lng {wp.lng.toFixed(4)}</span>
-                  <button
-                    onClick={() => handleMarkerRightClick(idx)}
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 hover:bg-red-200 text-gray-600 hover:text-red-600 transition-all focus:outline-none focus:ring-2 focus:ring-red-400 text-lg"
-                    aria-label={`Remove waypoint ${idx + 1}`}
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
-                  </button>
-                </li>
-              ))}
+  <li key={idx} className="flex items-center gap-5 bg-gradient-to-r from-blue-100/70 to-white rounded-2xl px-5 py-4 shadow-lg border border-blue-200">
+    <span className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-600 text-white font-extrabold text-xl shadow-lg border-2 border-white">
+      {idx + 1}
+    </span>
+    <span className="flex-1 text-gray-900 truncate text-lg font-semibold">
+      Lat {wp.lat.toFixed(4)}, Lng {wp.lng.toFixed(4)}
+    </span>
+    <button
+      onClick={() => handleMarkerRightClick(idx)}
+      className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 hover:bg-red-500 text-gray-600 hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-red-400 text-2xl shadow border border-gray-300"
+      aria-label={`Remove waypoint ${idx + 1}`}
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-7 h-7"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+    </button>
+  </li>
+))}
             </ol>
           )}
         </div>
@@ -117,7 +128,7 @@ export default function MapPanel({ waypoints, setWaypoints, polyline, setPolylin
       <div className="flex-1 rounded-2xl shadow-xl overflow-hidden">
         <GoogleMap
           mapContainerStyle={containerStyle}
-          center={waypoints[0] || center}
+          center={mapCenter || waypoints[0] || center}
           zoom={13}
           onClick={handleMapClick}
           options={{
