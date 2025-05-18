@@ -54,7 +54,7 @@ export default function MapSearch({ onSearchAddress }) {
         <input
           ref={inputRef}
           type="text"
-          className="text-xs px-3 py-1 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all w-44 sm:w-56 truncate"
+          className="text-xs px-3 py-1 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all w-64 sm:w-80 truncate"
           placeholder="Search address or place..."
           aria-label="Search address"
           onKeyDown={e => {

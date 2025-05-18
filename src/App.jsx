@@ -6,7 +6,7 @@ import { useState, useMemo } from 'react';
 import { interpolateRoute } from './utils/interpolateRoute';
 import { usePlayback } from './hooks/usePlayback';
 import { useSessionStorage } from './hooks/useSessionStorage';
-import { useLoadScript } from "@react-google-maps/api"; // ADD THIS
+import { useLoadScript } from "@react-google-maps/api";
 
 // Helper: Google Geocoding API
 async function geocodeAddress(address) {
@@ -30,29 +30,27 @@ export default function App() {
 
   const [mapCenter, setMapCenter] = useState(null);
 
-  // App.jsx -- only the handleSearchAddress function needs to be changed:
   async function handleSearchAddress(address, lat = null, lng = null) {
     if (lat != null && lng != null) {
       setMapCenter({ lat, lng });
       return;
     }
-    // Fallback: use geocode
     const result = await geocodeAddress(address);
     if (result) setMapCenter(result);
   }
-
 
   const [waypoints, setWaypoints] = useSessionStorage('waypoints', []);
   const [polyline, setPolyline] = useState([]);
   const [stats, setStats] = useState(null);
 
   const interpolatedRoute = useMemo(
-    () => interpolateRoute(polyline, 15),
+    () => interpolateRoute(polyline, 15), // or 10 for finer/smoother, adjust as you like
     [polyline]
   );
 
-  // Set default playback speed to 1x
   const playback = usePlayback(interpolatedRoute, 0.25);
+  // Add interpolatedRoute so you can pass to ControlsBar as a prop
+  playback.interpolatedRoute = interpolatedRoute;
 
   if (loadError) return <div className="p-10">Error loading Google Maps API</div>;
   if (!isLoaded) return <div className="p-10">Loading Maps…</div>;
@@ -61,19 +59,23 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
       <HeaderBar />
       <div className="flex-1 flex flex-col relative">
-      <SplitScreen
-        waypoints={waypoints}
-        setWaypoints={setWaypoints}
-        polyline={polyline}
-        setPolyline={setPolyline}
-        stats={stats}
-        setStats={setStats}
-        playback={playback}
-        mapCenter={mapCenter}
-        onSearchAddress={handleSearchAddress}
-      />
+        <SplitScreen
+          waypoints={waypoints}
+          setWaypoints={setWaypoints}
+          polyline={polyline}
+          setPolyline={setPolyline}
+          stats={stats}
+          setStats={setStats}
+          playback={playback}
+          mapCenter={mapCenter}
+          onSearchAddress={handleSearchAddress}
+        />
       </div>
-      <ControlsBar playback={playback} stats={stats} />
+      <ControlsBar
+        playback={playback}
+        stats={stats}
+        interpolatedRoute={interpolatedRoute}
+      />
       <Footer />
     </div>
   );
