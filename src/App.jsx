@@ -30,11 +30,17 @@ export default function App() {
 
   const [mapCenter, setMapCenter] = useState(null);
 
-  async function handleSearchAddress(address) {
+  // App.jsx -- only the handleSearchAddress function needs to be changed:
+  async function handleSearchAddress(address, lat = null, lng = null) {
+    if (lat != null && lng != null) {
+      setMapCenter({ lat, lng });
+      return;
+    }
+    // Fallback: use geocode
     const result = await geocodeAddress(address);
     if (result) setMapCenter(result);
-    // Optionally: else show an error/toast
   }
+
 
   const [waypoints, setWaypoints] = useSessionStorage('waypoints', []);
   const [polyline, setPolyline] = useState([]);
